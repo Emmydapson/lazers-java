@@ -1,18 +1,73 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
 
 group = 'com.oneverse'
 version = '0.1.0'
-description = 'Private server-side Lazers Signal Protocol v1 SDK'
+description = 'Server-side Java SDK for Lazers Signal Protocol v1'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
     withSourcesJar()
+    withJavadocJar()
 }
 
-repositories { mavenCentral() }
-dependencies { testImplementation 'org.junit.jupiter:junit-jupiter:5.11.3' }
-tasks.named('test') { useJUnitPlatform() }
-tasks.named('jar') { manifest { attributes('Implementation-Title': 'Lazers Java SDK', 'Implementation-Version': project.version) } }
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.3'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('jar') {
+    manifest {
+        attributes(
+            'Implementation-Title': 'Lazers Java SDK',
+            'Implementation-Version': project.version
+        )
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = 'Lazers Java SDK'
+                description = 'Server-side Java SDK for Lazers Signal Protocol v1'
+                url = 'https://github.com/Emmydapson/lazers'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'emmydapson'
+                        name = 'Emmanuel Ilori'
+                        email = 'iloriemmanuel00@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/Emmydapson/lazers.git'
+                    developerConnection = 'scm:git:ssh://github.com:Emmydapson/lazers.git'
+                    url = 'https://github.com/Emmydapson/lazers'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'staging'
+            url = layout.buildDirectory.dir('repos/staging')
+        }
+    }
+}

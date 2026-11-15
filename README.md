@@ -1,16 +1,46 @@
-# Lazers Java SDK (private) v0.1.0
+# Lazers Java SDK
 
-Server-side Java 17+ SDK for Lazers Signal Protocol v1. This module is intentionally not configured for publication.
+Server-side Java 17+ SDK for Lazers Signal Protocol v1.
+
+Repository: [https://github.com/Emmydapson/lazers](https://github.com/Emmydapson/lazers)
+
+## Coordinates
+
+```xml
+<dependency>
+  <groupId>com.oneverse</groupId>
+  <artifactId>lazers</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+Or with Gradle:
+
+```groovy
+implementation 'com.oneverse:lazers:0.1.0'
+```
+
+## Quickstart
 
 ```java
+import com.oneverse.lazers.LazersClient;
+
 LazersClient client = LazersClient.builder()
-    .apiKey("server-only-key")
+    .apiKey(System.getenv("LAZERS_API_KEY"))
     .endpoint("https://api.lazers.app")
     .projectId("project_1")
     .environment("production")
     .serviceName("my-api")
     .build();
-client.captureError(exception);
+
+try {
+    processOrder();
+} catch (Exception exception) {
+    client.captureError(exception);
+}
+
+// On shutdown:
+client.close();
 ```
 
 Use `LazersClient.Context` for metadata, actor, tags, resources, correlation ID, trace ID, release, provider, and event name. `captureSignal(new LazersClient.SignalInput(...))` supports custom and explicit event categories, including `provider_failure`.
@@ -25,4 +55,4 @@ For Quarkus, create the client as an application-scoped bean and close it on shu
 
 ## Security
 
-This SDK is server-side only. Never expose a project API key in Android apps, browser bundles, or frontend clients. Mobile support requires Lazers' future client-safe credential/DSN model.
+This SDK is server-side only. Never expose a project API key in Android apps, browser bundles, or frontend clients. Mobile support requires Lazers' client-safe credential/DSN model.
